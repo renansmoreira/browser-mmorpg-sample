@@ -13,7 +13,10 @@ export class Network {
 
   connect() {
     this.socket = io('http://localhost:3000');
+    
+    this.socket.on('pong', (latencyInMs: any) => this.sandbox.mediator.publish('server:latency', latencyInMs));
     this.socket.onevent = (packet: any) => this.broadcastServerMessage(packet);
+
     this.sandbox.mediator.subscribe('movement-was-made', this, this.sendPlayerMovement);
   }
 

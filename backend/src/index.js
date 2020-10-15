@@ -1,9 +1,11 @@
-const app = require('express')();
-const http = require('http').createServer(app);
-const io = require('socket.io')(http);
+const express = require('express');
+const app = express();
+const http = require('http').Server(app);
+const io = require('socket.io')(http, {
+  origins: '*:*',
+  pingInterval: 3000
+});
 const uuid = require('uuid');
-
-io.set('origins', '*:*');
 
 const players = {};
 

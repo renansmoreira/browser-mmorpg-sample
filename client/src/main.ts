@@ -3,12 +3,14 @@ import { Controllers } from './controllers';
 import { Game } from './game';
 import { Player } from './player';
 import { Tree } from './tree';
+import { Latency } from './latency';
 
 const sandbox = new Sandbox();
 sandbox.network.connect();
 new Controllers(sandbox).configureListener();
 new Game(sandbox).configure().start();
 new Player(sandbox);
+new Latency(sandbox);
 
 const players: Record<string, any> = {};
 

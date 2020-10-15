@@ -3,7 +3,6 @@
   "version": "0.0.1",
   "main": "config.js",
   "scripts": {
-    "start": "npx browser-sync start --server --files \"*.html\" --port 3300",
     "test": "echo \"Error: no test specified\" && exit 1",
     "serve": "npx browser-sync start --server --files ./dist/*.js,*.html",
     "build:watch": "npx webpack -w"
