@@ -12,7 +12,7 @@ export class Network {
   }
 
   connect() {
-    this.socket = io('http://localhost:3000');
+    this.socket = io('http://renansmoreiragamebackend.brazilsouth.azurecontainer.io');
     
     this.socket.on('pong', (latencyInMs: any) => this.sandbox.mediator.publish('server:latency', latencyInMs));
     this.socket.onevent = (packet: any) => this.broadcastServerMessage(packet);
