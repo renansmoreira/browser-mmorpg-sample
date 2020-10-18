@@ -24,7 +24,7 @@ export class Controllers {
   }
 
   private processInput(movement: Movement): void {
-    if (Movement) {
+    if (movement) {
       this.sandbox.mediator.publish('movement-key-was-pressed', movement);
     }
   }

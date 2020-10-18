@@ -1,25 +1,38 @@
 import { Sandbox } from './sandbox';
+import { Position } from './position';
+import { Screen } from './screen';
 
 export class Tree {
   sandbox: Sandbox;
-  x: number;
-  y: number;
+  position: Position;
+  originalPosition: Position;
   width: number;
   height: number;
   color: string;
 
-  constructor(sandbox: Sandbox, position: any) {
+  constructor(sandbox: Sandbox, position: any, playerInfo: any) {
     this.sandbox = sandbox;
-    this.x = position.x;
-    this.y = position.y;
+    this.originalPosition = new Position(position.x, position.y);
     this.width = this.height = 20;
     this.color = 'green';
 
+    this.changePosition({
+      x: playerInfo.px,
+      y: playerInfo.py
+    });
+
     this.sandbox.mediator.subscribe('update', this, this.update);
+    this.sandbox.mediator.subscribe('player-started', this, this.changePosition);
+    this.sandbox.mediator.subscribe('movement-was-made', this, this.changePosition);
   }
 
-  update(context: CanvasRenderingContext2D): void {
-    context.fillStyle = this.color;
-    context.fillRect(this.x, this.y, this.width, this.height);
+  changePosition(playerPosition: any) {
+    this.position = new Position(this.originalPosition.x - playerPosition.x,
+      this.originalPosition.y - playerPosition.y);
+  }
+
+  update(screen: Screen): void {
+    screen.fillStyle(this.color);
+    screen.fillRect(screen.displayX + this.position.x, screen.displayY + this.position.y, this.width, this.height);
   }
 }

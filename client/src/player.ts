@@ -1,8 +1,10 @@
 import { Sandbox } from './sandbox';
+import { Screen } from './screen';
 import { Movement } from './movement';
 
 export class Player {
   sandbox: Sandbox;
+  id: string;
   name: string;
   width: number;
   heigth: number;
@@ -10,36 +12,28 @@ export class Player {
   y: number;
   speed: number;
   color: string;
-  isReadOnly: boolean;
   movementHandlers: Record<Movement, Function> = {};
 
-  constructor(sandbox: Sandbox, playerInfo?: any, isReadOnly?: boolean) {
+  constructor(sandbox: Sandbox) {
     this.sandbox = sandbox;
     this.name = new Date().getTime().toString();
     this.width = this.heigth = 10;
     this.speed = 10;
     this.color = 'black';
-    this.isReadOnly = isReadOnly;
 
-    if (!isReadOnly) {
-      this.registerMovementHandlers();
-      this.sandbox.mediator.subscribe('server:joined', this, this.start);
-    }
-    else {
-      this.start(playerInfo);
-    }
+    this.registerMovementHandlers();
+    this.sandbox.mediator.subscribe('server:joined', this, this.configure);
   }
 
-  start(joiningInfo: any): void {
+  configure(joiningInfo: any): void {
+    this.id = joiningInfo.id;
     this.x = joiningInfo.position.x;
     this.y = joiningInfo.position.y;
 
+    this.sandbox.mediator.publish('player-started', { x: this.x, y: this.y });
+    this.sandbox.network.send('player-started', this.name);
+    this.sandbox.mediator.subscribe('movement-key-was-pressed', this, this.move);
     this.sandbox.mediator.subscribe('update', this, this.update);
-
-    if (!this.isReadOnly) {
-      this.sandbox.network.send('player-started', this.name);
-      this.sandbox.mediator.subscribe('movement-key-was-pressed', this, this.move);
-    }
   }
 
   registerMovementHandlers(): void {
@@ -49,22 +43,17 @@ export class Player {
     this.movementHandlers[Movement.Right] = () => this.x += 1 * this.speed;
   }
 
-  changePosition(position: any): void {
-    this.x = position.x;
-    this.y = position.y;
-  }
-
-  remove(): void {
-    this.sandbox.mediator.unsubscribe(this);
-  }
-
-  update(context: CanvasRenderingContext2D): void {
-    context.fillStyle = this.color;
-    context.fillRect(this.x, this.y, this.width, this.heigth);
+  update(screen: Screen): void {
+    screen.fillStyle(this.color);
+    screen.fillRect(screen.displayX, screen.displayY, this.width, this.heigth);
   }
 
   move(movement: Movement): void {
     (this.movementHandlers[movement] || (() => {}))();
-    this.sandbox.mediator.publish('movement-was-made', { x: this.x, y: this.y });
+
+    this.sandbox.mediator.publish('movement-was-made', {
+      x: this.x,
+      y: this.y
+    });
   }
 }
