@@ -2,41 +2,37 @@ import { Sandbox } from './sandbox';
 import { Controllers } from './controllers';
 import { Game } from './game';
 import { Player } from './player';
+import { OtherPlayer } from './otherPlayer';
 import { Tree } from './tree';
 import { Latency } from './latency';
 
 const sandbox = new Sandbox();
-sandbox.network.connect();
+
 new Controllers(sandbox).configureListener();
-new Game(sandbox).configure().start();
 new Player(sandbox);
 new Latency(sandbox);
+new Game(sandbox).configure().start();
 
-const players: Record<string, any> = {};
+sandbox.network.connect();
+
+sandbox.mediator.subscribe('server:map', this, (mapInfo: any) => {
+  mapInfo.a.forEach((info: any) => new Tree(sandbox, info, mapInfo));
+});
 
 sandbox.mediator.subscribe('server:map-players', this, (othersPlayers: any) => {
-  othersPlayers.forEach((otherPlayer: any) => {
-    players[otherPlayer.id] = new Player(sandbox, otherPlayer, true);
+  othersPlayers.forEach((otherPlayerInfo: any) => {
+    new OtherPlayer(sandbox, otherPlayerInfo);
   });
 });
 
 sandbox.mediator.subscribe('server:new-player-joined', this, (otherPlayer: any) => {
-  if (!players[otherPlayer.id]) {
-    players[otherPlayer.id] = new Player(sandbox, otherPlayer, true);
-  }
+    new OtherPlayer(sandbox, otherPlayer);
 });
 
-sandbox.mediator.subscribe('server:player-disconnected', this, (otherPlayer: any) => {
-  players[otherPlayer.id].remove();
-  delete players[otherPlayer.id];
+sandbox.mediator.subscribe('server:player-disconnected', this, (otherPlayerInfo: any) => {
+  sandbox.mediator.publish('other-player-disconnected', otherPlayerInfo);
 });
 
 sandbox.mediator.subscribe('server:player-moved', this, (otherPlayer: any) => {
-  players[otherPlayer.id].changePosition(otherPlayer.position);
+  sandbox.mediator.publish('other-player-moved', otherPlayer);
 });
-
-new Tree(sandbox, { x: 100, y: 200 });
-new Tree(sandbox, { x: 300, y: 100 });
-new Tree(sandbox, { x: 200, y: 400 });
-new Tree(sandbox, { x: 430, y: 410 });
-new Tree(sandbox, { x: 30, y: 40 });

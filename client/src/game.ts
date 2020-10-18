@@ -10,9 +10,10 @@ export class Game {
     this.sandbox = sandbox;
     this.framesPerSecond = 20;
 
+    // TODO: Move to screen adapter
     this.canvas = document.createElement('canvas');
-    this.canvas.width = 500;
-    this.canvas.height = 500;
+    this.canvas.width = 900;
+    this.canvas.height = 900;
     this.canvas.style.border = '1px solid black';
     this.canvasContext = this.canvas.getContext('2d');
   }
@@ -23,11 +24,7 @@ export class Game {
   }
 
   start(): void {
-    setInterval(() => this.update(), 1000 / this.framesPerSecond);
+    this.sandbox.screen.configure(this.canvasContext);
+    setInterval(() => this.sandbox.screen.update(), 1000 / this.framesPerSecond);
   } 
-
-  update(): void {
-    this.canvasContext.clearRect(0, 0, 500, 500);
-    this.sandbox.mediator.publish('update', this.canvasContext);
-  }
 }

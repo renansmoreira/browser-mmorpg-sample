@@ -1,4 +1,5 @@
 import { Sandbox } from './sandbox';
+import { Screen } from './screen';
 
 export class Latency {
   sandbox: Sandbox;
@@ -15,8 +16,9 @@ export class Latency {
     this.latencyInMs = latencyInMs;
   }
 
-  update(context: CanvasRenderingContext2D): void {
-    context.font = '15px arial';
-    context.fillText(`Latency: ${this.latencyInMs}ms`, 10, 20);
+  update(screen: Screen): void {
+    screen.font('15px arial');
+    screen.fontColor('blue');
+    screen.fillText(`Latency: ${this.latencyInMs}ms`, 10, 20);
   }
 }
