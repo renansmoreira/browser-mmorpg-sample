@@ -30,8 +30,9 @@ jobs:
         uses: actions/upload-artifact@v2.2.0
         with:
           name: backend-artifact
+          root: client/src
           path: |
-            client/src/dist
-            client/src/assets
-            client/src/index.html
+            dist/
+            assets/
+            index.html
           retention-days: 1
