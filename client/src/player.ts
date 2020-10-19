@@ -1,6 +1,7 @@
 import { Sandbox } from './sandbox';
 import { Screen } from './screen';
 import { Movement } from './movement';
+import { Sprite } from './sprite';
 
 export class Player {
   sandbox: Sandbox;
@@ -13,13 +14,15 @@ export class Player {
   speed: number;
   color: string;
   movementHandlers: Record<Movement, Function> = {};
+  sprite: Sprite;
 
   constructor(sandbox: Sandbox) {
     this.sandbox = sandbox;
     this.name = new Date().getTime().toString();
     this.width = this.heigth = 10;
-    this.speed = 10;
+    this.speed = 5;
     this.color = 'black';
+    this.sprite = new Sprite('/assets/walking.png');
 
     this.registerMovementHandlers();
     this.sandbox.mediator.subscribe('server:joined', this, this.configure);
@@ -44,8 +47,24 @@ export class Player {
   }
 
   update(screen: Screen): void {
-    screen.fillStyle(this.color);
-    screen.fillRect(screen.displayX, screen.displayY, this.width, this.heigth);
+    // TODO: Remove later
+    if (this.sandbox.controllers.leftIsPressed) {
+      this.move(Movement.Left);
+    }
+
+    if (this.sandbox.controllers.rightIsPressed) {
+      this.move(Movement.Right);
+    }
+
+    if (this.sandbox.controllers.upIsPressed) {
+      this.move(Movement.Up);
+    }
+
+    if (this.sandbox.controllers.downIsPressed) {
+      this.move(Movement.Down);
+    }
+     
+    this.sprite.update(screen, this.sandbox);
   }
 
   move(movement: Movement): void {

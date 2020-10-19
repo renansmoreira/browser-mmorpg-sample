@@ -4,6 +4,7 @@ import { Mediator } from './mediator';
 import { Network } from './network';
 import { Screen } from './screen';
 import { GameState } from './gameState';
+import { Controllers } from './controllers';
 
 export class Sandbox {
   logger: Logger;
@@ -12,6 +13,7 @@ export class Sandbox {
   network: Network;
   screen: Screen;
   gameState: GameState;
+  controllers: Controllers;
 
   constructor() {
     this.mediator = new Mediator(this);
@@ -20,5 +22,6 @@ export class Sandbox {
     this.randomizer = new Randomizer();
     this.network = new Network(this);
     this.gameState = new GameState(this);
+    this.controllers = new Controllers(this);
   }
 }

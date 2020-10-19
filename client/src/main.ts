@@ -8,7 +8,6 @@ import { Latency } from './latency';
 
 const sandbox = new Sandbox();
 
-new Controllers(sandbox).configureListener();
 new Player(sandbox);
 new Latency(sandbox);
 new Game(sandbox).configure().start();

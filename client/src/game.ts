@@ -8,12 +8,12 @@ export class Game {
 
   constructor(sandbox: Sandbox) {
     this.sandbox = sandbox;
-    this.framesPerSecond = 20;
+    this.framesPerSecond = 60;
 
     // TODO: Move to screen adapter
     this.canvas = document.createElement('canvas');
-    this.canvas.width = 900;
-    this.canvas.height = 900;
+    this.canvas.width = window.innerWidth * 95 / 100;
+    this.canvas.height = window.innerHeight * 95 / 100;
     this.canvas.style.border = '1px solid black';
     this.canvasContext = this.canvas.getContext('2d');
   }

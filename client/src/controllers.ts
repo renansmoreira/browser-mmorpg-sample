@@ -12,20 +12,60 @@ inputs[Key.K.toString()] = Movement.Interact;
 
 export class Controllers {
   sandbox: Sandbox;
+  leftIsPressed: boolean = false;
+  rightIsPressed: boolean = false;
+  upIsPressed: boolean = false;
+  downIsPressed: boolean = false;
+  anyMovementButtonIsPressed: boolean = false;
 
   constructor(sandbox: Sandbox) {
     this.sandbox = sandbox;
-  }
 
-  configureListener(): void {
-    document.addEventListener('keypress', (event) => {
+    document.addEventListener('keydown', (event) => {
       this.processInput(inputs[event.keyCode]);
     });
+
+    document.addEventListener('keyup', (event) => {
+      this.removeInput(inputs[event.keyCode]);
+    });
+  }
+
+  private removeInput(movement: Movement): void {
+    if (movement) {
+      if (movement === Movement.Left)
+        this.leftIsPressed = false;
+
+      if (movement === Movement.Right)
+        this.rightIsPressed = false;
+
+      if (movement === Movement.Up)
+        this.upIsPressed = false;
+
+      if (movement === Movement.Down)
+        this.downIsPressed = false;
+
+      this.anyMovementButtonIsPressed = false; //this.leftIsPressed === false && this.rightIsPressed === false;
+      //console.log('up', this.leftIsPressed, this.rightIsPressed, this.anyMovementButtonIsPressed);
+    }
   }
 
   private processInput(movement: Movement): void {
     if (movement) {
-      this.sandbox.mediator.publish('movement-key-was-pressed', movement);
+      if (movement === Movement.Left)
+        this.leftIsPressed = true;
+
+      if (movement === Movement.Right)
+        this.rightIsPressed = true;
+
+      if (movement === Movement.Up)
+        this.upIsPressed = true;
+
+      if (movement === Movement.Down)
+        this.downIsPressed = true;
+
+      this.anyMovementButtonIsPressed = true; //this.leftIsPressed || this.rightIsPressed;
+      //console.log('down', this.leftIsPressed, this.rightIsPressed, this.anyMovementButtonIsPressed);
+      //this.sandbox.mediator.publish('movement-key-was-pressed', movement);
     }
   }
 }
