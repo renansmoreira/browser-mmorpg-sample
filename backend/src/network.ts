@@ -18,7 +18,7 @@ export default class Network {
   start(): void {
     const mapName = 'first-map';
     this.socket.on('connection', (playerSocket) => {
-      playerSocket.join(mapName, () => this.mediator.publish('player-joined', this, playerSocket));
+      playerSocket.join(mapName, () => this.mediator.publish('player-joined', playerSocket));
       this.registerPlayerEvents(playerSocket);
     });
   }
@@ -40,8 +40,8 @@ export default class Network {
 
   registerPlayerEvents(playerSocket: io.Socket): void {
     playerSocket.on('player-started', (playerName) => this.mediator.publish('player-started', playerSocket, playerName));
-    playerSocket.on('movement-was-made', (position) => this.mediator.publish('player-moved', this, playerSocket, position));
-    playerSocket.on('disconnect', () => this.mediator.publish('player-disconnected', this, playerSocket));
+    playerSocket.on('movement-was-made', (position) => this.mediator.publish('player-moved', playerSocket, position));
+    playerSocket.on('disconnect', () => this.mediator.publish('player-disconnected', playerSocket));
   }
 
   publishTo(destinationSocket: io.Socket, event: string, data: any): Network {

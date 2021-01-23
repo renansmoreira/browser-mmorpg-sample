@@ -9,19 +9,22 @@ import NearbyEnvironmentService from '../ports-and-adapters/nearbyEnvironmentSer
 import MapCollection from '../ports-and-adapters/mapCollection';
 
 export default class PlayerEventHandler implements EventHandler {
+  network: Network;
   playerCollection: PlayerCollection;
   nearbyEnvironmentService: NearbyEnvironmentService;
   mapCollection: MapCollection;
 
-  constructor(playerCollection: PlayerCollection,
+  constructor(network: Network,
+    playerCollection: PlayerCollection,
     nearbyEnvironmentService: NearbyEnvironmentService,
     mapCollection: MapCollection) {
+    this.network = network;
     this.playerCollection = playerCollection;
     this.nearbyEnvironmentService = nearbyEnvironmentService;
     this.mapCollection = mapCollection;
   }
 
-  async fetchStarterInformation(network: Network, playerSocket: io.Socket): void {
+  async fetchStarterInformation(playerSocket: io.Socket): void {
     const player: Player = await this.playerCollection.get(playerSocket.id);
 
     // TODO: Maybe I need to create a collection for current player data, moving
@@ -29,42 +32,42 @@ export default class PlayerEventHandler implements EventHandler {
     // and maybe not saved yet, state
     await this.playerCollection.add(player);
 
-    network.publishTo(playerSocket, 'joined', player);
+    this.network.publishTo(playerSocket, 'joined', player);
   }
 
-  async fetchPlayerMap(network: Network, playerSocket: io.Socket): void {
+  async fetchPlayerMap(playerSocket: io.Socket): void {
     const player: Player = await this.playerCollection.get(playerSocket.id);
     // TODO: Dynamically get map name instead of a fixed one
     const plot: Plot = await this.mapCollection.get('first-map', player);
 
-    network.publishTo(playerSocket, 'map', plot.getClientDefinition());
+    this.network.publishTo(playerSocket, 'map', plot.getClientDefinition());
   }
 
-  async fetchNearbyEnvironment(network: Network, playerSocket: io.Socket): void {
+  async fetchNearbyEnvironment(playerSocket: io.Socket): void {
     const othersPlayers: Player[] = await this.nearbyEnvironmentService.fetchAnotherPlayers(playerSocket);
-    network.publishTo(playerSocket, 'map-players', othersPlayers);
+    this.network.publishTo(playerSocket, 'map-players', othersPlayers);
   }
   
-  async notifyAboutNewPlayerJoined(network: Network, playerSocket: io.Socket): void {
+  async notifyAboutNewPlayerJoined(playerSocket: io.Socket): void {
     const player: Player = await this.playerCollection.get(playerSocket.id);
     // TODO: Dynamically get the map location instead of a fixed one
-    network.playerPublishTo(playerSocket, 'first-map', 'new-player-joined', player);
+    this.network.playerPublishTo(playerSocket, 'first-map', 'new-player-joined', player);
   }
 
   async registerPlayerInfo(playerSocket: io.Socket, playerName: string): void {
     await this.playerCollection.updateName(playerSocket.id, playerName);
   }
 
-  async processMovement(network: Network, playerSocket: io.Socket, position: any): void {
+  async processMovement(playerSocket: io.Socket, position: any): void {
     const player: Player = await this.playerCollection.get(playerSocket.id);
     await this.playerCollection.updatePosition(playerSocket.id, position);
-    network.playerPublishTo(playerSocket, 'first-map', 'player-moved', player);
+    this.network.playerPublishTo(playerSocket, 'first-map', 'player-moved', player);
   }
 
-  async removePlayerInfo(network: Network, playerSocket: io.Socket): void {
+  async removePlayerInfo(playerSocket: io.Socket): void {
     const player: Player = await this.playerCollection.get(playerSocket.id);
     await this.playerCollection.remove(playerSocket.id);
-    network.playerPublishTo(playerSocket, 'first-map', 'player-disconnected', player);
+    this.network.playerPublishTo(playerSocket, 'first-map', 'player-disconnected', player);
   }
 
   registerEvents(mediator: Mediator): void {

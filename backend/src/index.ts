@@ -7,14 +7,16 @@ import NearbyEnvironmentService from './ports-and-adapters/nearbyEnvironmentServ
 import MapCollection from './ports-and-adapters/mapCollection';
 import PlayerEventHandler from './event-handlers/playerEventHandler';
 
-const mediator = new Mediator();
-const httpServer = new HttpServer();
-const network = new Network(httpServer, mediator);
+import diContainer from './dependencyInjectionContainer';
+
+const mediator = diContainer.get(Mediator);
+const httpServer = diContainer.get(HttpServer);
+const network = diContainer.get(Network);
 
 network.start();
 httpServer.start();
 
-const playerCollection: PlayerCollection = new PlayerCollection();
-const nearbyEnviromentService = new NearbyEnvironmentService(network);
-const mapCollection: MapCollection = new MapCollection();
-new PlayerEventHandler(playerCollection, nearbyEnviromentService, mapCollection).registerEvents(mediator);
+const playerCollection: PlayerCollection = diContainer.get(PlayerCollection);
+const nearbyEnviromentService = diContainer.get(NearbyEnvironmentService);
+const mapCollection: MapCollection = diContainer.get(MapCollection);
+diContainer.get(PlayerEventHandler).registerEvents(mediator);
