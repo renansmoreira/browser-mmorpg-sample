@@ -12,6 +12,7 @@ export default class PlayerCollection {
   }
 
   async get(playerId: string): Promise<Player> {
+    // TODO: Add some 1st level cache here
     // TODO: Remove default player later, still need to add player creation step
     const executor = (resolve) => {
       resolve(this.currentPlayers[playerId] || new Player(playerId, { x: 120, y: 300 }));
@@ -35,7 +36,7 @@ export default class PlayerCollection {
   }
 
   async updatePosition(playerId: string, newPosition: Position): void {
-    const player: Player = this.get(playerId);
+    const player: Player = await this.get(playerId);
     player.changePosition(newPosition);
 
     this.update(player);

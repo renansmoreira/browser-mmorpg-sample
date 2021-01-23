@@ -23,14 +23,34 @@ export default class Network {
     });
   }
 
+  async getAllClientsIds(): Promise<string> {
+    const executor = (resolve, reject) => {
+      this.socket.clients((error, allClientsIds) => {
+        if (error) {
+          console.error('Failed to fetch all clients from socket');
+          return console.error(error);
+        }
+
+        resolve(allClientsIds);
+      });
+    };
+
+    return new Promise<string>(executor);
+  }
+
   registerPlayerEvents(playerSocket: io.Socket): void {
     playerSocket.on('player-started', (playerName) => this.mediator.publish('player-started', playerSocket, playerName));
-    playerSocket.on('movement-was-made', (position) => this.mediator.publish('player-moved', position));
-    playerSocket.on('disconnect', () => this.mediator.publish('player-disconnected', playerSocket));
+    playerSocket.on('movement-was-made', (position) => this.mediator.publish('player-moved', this, playerSocket, position));
+    playerSocket.on('disconnect', () => this.mediator.publish('player-disconnected', this, playerSocket));
   }
 
   publishTo(destinationSocket: io.Socket, event: string, data: any): Network {
     this.socket.to(destinationSocket.id).emit(event, data);
+    return this;
+  }
+
+  playerPublishTo(playerSocket: io.Socket, roomName: string, event: string, data: any): Network {
+    playerSocket.to(roomName).emit(event, data);
     return this;
   }
 }
