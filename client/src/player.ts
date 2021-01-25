@@ -2,6 +2,7 @@ import { Sandbox } from './sandbox';
 import { Screen } from './screen';
 import { Movement } from './movement';
 import { Sprite } from './sprite';
+import { Position } from './position';
 
 export class Player {
   sandbox: Sandbox;
@@ -15,6 +16,7 @@ export class Player {
   color: string;
   movementHandlers: Record<Movement, Function> = {};
   sprite: Sprite;
+  selectedMonsterId: string;
 
   constructor(sandbox: Sandbox) {
     this.sandbox = sandbox;
@@ -36,6 +38,8 @@ export class Player {
     this.sandbox.mediator.publish('player-started', { x: this.x, y: this.y });
     this.sandbox.network.send('player-started', this.name);
     this.sandbox.mediator.subscribe('movement-key-was-pressed', this, this.move);
+    this.sandbox.mediator.subscribe('target-key-was-pressed', this, this.selectNearbyMonster);
+    this.sandbox.mediator.subscribe('attack-key-was-pressed', this, this.attackSelectedMonster);
     this.sandbox.mediator.subscribe('update', this, this.update);
   }
 
@@ -74,5 +78,14 @@ export class Player {
       x: this.x,
       y: this.y
     });
+  }
+
+  selectNearbyMonster(): void {
+    this.selectedMonsterId = this.sandbox.gameState.getNearestMonster(new Position(this.x, this.y)).id;
+    this.sandbox.mediator.publish('monster-was-targeted', this.selectedMonsterId);
+  }
+
+  attackSelectedMonster(): void {
+    this.sandbox.mediator.publish('monster-was-attacked', this.selectedMonsterId);
   }
 }

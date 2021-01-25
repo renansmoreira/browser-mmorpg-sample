@@ -19,10 +19,15 @@ export class Network {
     this.socket.onevent = (packet: any) => this.broadcastServerMessage(packet);
 
     this.sandbox.mediator.subscribe('movement-was-made', this, this.sendPlayerMovement);
+    this.sandbox.mediator.subscribe('monster-was-attacked', this, this.sendAttackToMonster);
   }
 
-  sendPlayerMovement(position: any) {
+  sendPlayerMovement(position: any): void {
     this.send('movement-was-made', position);
+  }
+
+  sendAttackToMonster(monsterId: string): void {
+    this.send('player-attacked', monsterId);
   }
 
   send(eventName: string, message: any): void {

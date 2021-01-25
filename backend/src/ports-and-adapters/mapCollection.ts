@@ -2,9 +2,9 @@ import Player from '../models/player';
 import Plot from '../models/plot';
 
 export default class MapCollection {
-  get(mapName: string, player: Player): Promise<Plot> {
+  get(mapName: string): Promise<Plot> {
     const executor = (resolve, reject) => {
-      const plot: Plot = new Plot(mapName, player);
+      const plot: Plot = new Plot(mapName);
 
       if (mapName === 'first-map') {
         plot.setEnvironmentObjects([

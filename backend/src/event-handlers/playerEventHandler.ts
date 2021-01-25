@@ -4,6 +4,10 @@ import EventHandler from './eventHandler';
 import Network from '../network';
 import Mediator from '../base/mediator';
 
+import Player from '../models/player';
+import Monster from '../models/monster';
+import DamageDealt from '../models/damageDealt';
+import NearbyEnvironment from '../models/nearbyEnvironment';
 import PlayerCollection from '../ports-and-adapters/playerCollection';
 import NearbyEnvironmentService from '../ports-and-adapters/nearbyEnvironmentService';
 import MapCollection from '../ports-and-adapters/mapCollection';
@@ -38,14 +42,22 @@ export default class PlayerEventHandler implements EventHandler {
   async fetchPlayerMap(playerSocket: io.Socket): void {
     const player: Player = await this.playerCollection.get(playerSocket.id);
     // TODO: Dynamically get map name instead of a fixed one
-    const plot: Plot = await this.mapCollection.get('first-map', player);
+    const plot: Plot = await this.mapCollection.get('first-map');
 
     this.network.publishTo(playerSocket, 'map', plot.getClientDefinition());
   }
 
-  async fetchNearbyEnvironment(playerSocket: io.Socket): void {
+  // TODO: Remove and add players to fetchNearbyEnvironment event handler
+  async fetchOthersPlayers(playerSocket: io.Socket): void {
     const othersPlayers: Player[] = await this.nearbyEnvironmentService.fetchAnotherPlayers(playerSocket);
     this.network.publishTo(playerSocket, 'map-players', othersPlayers);
+  }
+
+  async fetchNearbyEnvironment(playerSocket: io.Socket): void {
+    const nearbyEnvironment: NearbyEnvironment = await this.nearbyEnvironmentService.getFor(playerSocket);
+
+    this.network.publishTo(playerSocket, 'map-players', nearbyEnvironment.players);
+    this.network.publishTo(playerSocket, 'nearby-environment', nearbyEnvironment);
   }
   
   async notifyAboutNewPlayerJoined(playerSocket: io.Socket): void {
@@ -64,6 +76,15 @@ export default class PlayerEventHandler implements EventHandler {
     this.network.playerPublishTo(playerSocket, 'first-map', 'player-moved', player);
   }
 
+  async processMonsterAttack(playerSocket: io.Socket, monsterId: string): void {
+    // TODO: Add attack validations, like position consistency, map, etc.
+    const player: Player = await this.playerCollection.get(playerSocket.id);
+    const monster: Monster = await this.nearbyEnvironmentService.getMonster(monsterId);
+    const damageDealt: DamageDealt = player.attack(monster);
+
+    this.network.publishToEveryone('first-map', 'monster-attacked', damageDealt);
+  }
+
   async removePlayerInfo(playerSocket: io.Socket): void {
     const player: Player = await this.playerCollection.get(playerSocket.id);
     await this.playerCollection.remove(playerSocket.id);
@@ -73,11 +94,13 @@ export default class PlayerEventHandler implements EventHandler {
   registerEvents(mediator: Mediator): void {
     mediator.subscribe('player-joined', this, this.fetchStarterInformation);
     mediator.subscribe('player-joined', this, this.fetchPlayerMap);
+    mediator.subscribe('player-joined', this, this.fetchOthersPlayers);
     mediator.subscribe('player-joined', this, this.fetchNearbyEnvironment);
     mediator.subscribe('player-joined', this, this.notifyAboutNewPlayerJoined);
 
     mediator.subscribe('player-started', this, this.registerPlayerInfo);
     mediator.subscribe('player-moved', this, this.processMovement);
+    mediator.subscribe('player-attacked', this, this.processMonsterAttack);
     mediator.subscribe('player-disconnected', this, this.removePlayerInfo);
   }
 }

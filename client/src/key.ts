@@ -3,6 +3,7 @@ export enum Key {
   S = 83,
   A = 65,
   D = 68,
+  H = 72,
   J = 74,
   K = 75
 }

@@ -1,4 +1,6 @@
 import Position from './position';
+import Monster from './monster';
+import PlayerAttack from './playerAttack';
 
 export default class Player {
   id: string;
@@ -16,5 +18,10 @@ export default class Player {
 
   changePosition(newPosition: Position): void {
     this.position = newPosition;
+  }
+
+  attack(monster: Monster): number {
+    const attack: PlayerAttack = new PlayerAttack(10);
+    return monster.receive(attack);
   }
 }

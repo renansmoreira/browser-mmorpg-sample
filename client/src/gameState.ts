@@ -1,8 +1,13 @@
 import { Sandbox } from './sandbox';
+import { Tree } from './tree';
+import { SpawnedMonster } from './spawnedMonster';
+import { Position } from './position';
 
 export class GameState {
   sandbox: Sandbox;
   currentLocalPlayerPosition: any;
+  trees: Tree[];
+  spawnedMonsters: SpawnedMonster[];
 
   constructor(sandbox: Sandbox) {
     this.sandbox = sandbox;
@@ -13,5 +18,10 @@ export class GameState {
 
   changeLocalPlayerCurrentPosition(newPosition: any): void {
     this.currentLocalPlayerPosition = newPosition;
+  }
+
+  getNearestMonster(position: Position): SpawnedMonster {
+    return this.spawnedMonsters.reduce((previous, current) =>
+      previous.distanceFromPlayer > current.distanceFromPlayer ? current : previous);
   }
 }

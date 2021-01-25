@@ -41,7 +41,12 @@ export default class Network {
   registerPlayerEvents(playerSocket: io.Socket): void {
     playerSocket.on('player-started', (playerName) => this.mediator.publish('player-started', playerSocket, playerName));
     playerSocket.on('movement-was-made', (position) => this.mediator.publish('player-moved', playerSocket, position));
+    playerSocket.on('player-attacked', (monsterId) => this.mediator.publish('player-attacked', playerSocket, monsterId));
     playerSocket.on('disconnect', () => this.mediator.publish('player-disconnected', playerSocket));
+  }
+  
+  publishToEveryone(roomName: string, event: string, data: any): Network {
+    this.socket.to(roomName).emit(event, data);
   }
 
   publishTo(destinationSocket: io.Socket, event: string, data: any): Network {
