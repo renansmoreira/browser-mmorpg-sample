@@ -7,7 +7,7 @@ export class Position {
     this.y = y;
   }
 
-  getDistance(position: Position): number {
-    return Math.hypot(this.x - position.x, this.y - position.y);
+  getDistance(targetPosition: Position): number {
+    return Math.hypot(this.x - targetPosition.x, this.y - targetPosition.y);
   }
 }

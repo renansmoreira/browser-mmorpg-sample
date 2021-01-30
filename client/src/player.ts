@@ -74,10 +74,7 @@ export class Player {
   move(movement: Movement): void {
     (this.movementHandlers[movement] || (() => {}))();
 
-    this.sandbox.mediator.publish('movement-was-made', {
-      x: this.x,
-      y: this.y
-    });
+    this.sandbox.mediator.publish('movement-was-made', new Position(this.x, this.y));
   }
 
   selectNearbyMonster(): void {

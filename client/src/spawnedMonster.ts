@@ -25,7 +25,7 @@ export class SpawnedMonster {
     this.sandbox.mediator.subscribe('monster-was-targeted', this, this.changeSelection);
   }
 
-  changePosition(playerPosition: any) {
+  changePosition(playerPosition: Position) {
     this.position = new Position(this.originalPosition.x - playerPosition.x,
       this.originalPosition.y - playerPosition.y);
     this.distanceFromPlayer = this.position.getDistance(playerPosition);
