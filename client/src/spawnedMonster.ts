@@ -15,9 +15,11 @@ export class SpawnedMonster {
   constructor(sandbox: Sandbox, spawnedMonsterInfo: any) {
     this.id = spawnedMonsterInfo.id;
     this.sandbox = sandbox;
-    this.originalPosition = new Position(spawnedMonsterInfo.position.x, spawnedMonsterInfo.position.y);
+    this.position = this.originalPosition =
+      new Position(spawnedMonsterInfo.position.x, spawnedMonsterInfo.position.y);
     this.width = this.height = 20;
     this.color = 'purple';
+    this.changePosition();
 
     this.sandbox.mediator.subscribe('update', this, this.update);
     this.sandbox.mediator.subscribe('player-started', this, this.changePosition);
@@ -25,10 +27,15 @@ export class SpawnedMonster {
     this.sandbox.mediator.subscribe('monster-was-targeted', this, this.changeSelection);
   }
 
-  changePosition(playerPosition: Position) {
-    this.position = new Position(this.originalPosition.x - playerPosition.x,
-      this.originalPosition.y - playerPosition.y);
-    this.distanceFromPlayer = this.position.getDistance(playerPosition);
+  changePosition(): void {
+    if (!this.sandbox.gameState.currentLocalPlayerPosition)
+      return;
+
+    this.position = new Position(
+      this.originalPosition.x - this.sandbox.gameState.currentLocalPlayerPosition.x,
+      this.originalPosition.y - this.sandbox.gameState.currentLocalPlayerPosition.y);
+    this.distanceFromPlayer = this.position.getDistance(
+      this.sandbox.gameState.currentLocalPlayerPosition);
   }
 
   changeSelection(selectedMonsterId: string): void {
