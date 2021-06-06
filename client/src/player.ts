@@ -24,7 +24,16 @@ export class Player {
     this.width = this.heigth = 10;
     this.speed = 5;
     this.color = 'black';
-    this.sprite = new Sprite('/assets/walking.png');
+    this.sprite = new Sprite({
+      framesPerSprite: 3,
+      path: '/assets/walking.png',
+      flippedPath: '/assets/walking_flipped.png',
+      bindToPlayerMovements: true,
+      imageWidth: 96,
+      imageHeight: 132,
+      drawWidth: 40,
+      drawHeight: 50
+    });
 
     this.registerMovementHandlers();
     this.sandbox.mediator.subscribe('server:joined', this, this.configure);
@@ -68,7 +77,8 @@ export class Player {
       this.move(Movement.Down);
     }
      
-    this.sprite.update(screen, this.sandbox);
+    this.sprite.update(screen, new Position(
+      screen.displayX, screen.displayY), this.sandbox);
   }
 
   move(movement: Movement): void {
