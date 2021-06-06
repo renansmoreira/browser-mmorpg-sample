@@ -7,16 +7,11 @@ export class Tree {
   sandbox: Sandbox;
   position: Position;
   originalPosition: Position;
-  width: number;
-  height: number;
-  color: string;
   sprite: Sprite;
 
   constructor(sandbox: Sandbox, treeInfo: any) {
     this.sandbox = sandbox;
     this.position = this.originalPosition = new Position(treeInfo.x, treeInfo.y);
-    this.width = this.height = 20;
-    this.color = 'green';
     this.sprite = new Sprite({
       path: '/assets/cedar.png',
       bindToPlayerMovements: false,
@@ -46,7 +41,5 @@ export class Tree {
       screen.displayX + this.position.x,
       screen.displayY + this.position.y
     ), this.sandbox);
-    //screen.fillStyle(this.color);
-    //screen.fillRect(screen.displayX + this.position.x, screen.displayY + this.position.y, this.width, this.height);
   }
 }
