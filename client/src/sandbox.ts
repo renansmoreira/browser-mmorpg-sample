@@ -7,6 +7,7 @@ import { GameState } from './gameState';
 import { Controllers } from './controllers';
 
 export class Sandbox {
+  debug: boolean;
   logger: Logger;
   randomizer: Randomizer;
   mediator: Mediator;
@@ -16,6 +17,7 @@ export class Sandbox {
   controllers: Controllers;
 
   constructor() {
+    this.debug = false;
     this.mediator = new Mediator(this);
     this.screen = new Screen(this.mediator);
     this.logger = new Logger();

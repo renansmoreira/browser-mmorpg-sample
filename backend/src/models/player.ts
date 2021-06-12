@@ -1,5 +1,5 @@
 import Position from './position';
-import Monster from './monster';
+import SpawnedMonster from './spawnedMonster';
 import PlayerAttack from './playerAttack';
 
 export default class Player {
@@ -20,8 +20,8 @@ export default class Player {
     this.position = newPosition;
   }
 
-  attack(monster: Monster): number {
+  attack(spawnedMonster: SpawnedMonster): number {
     const attack: PlayerAttack = new PlayerAttack(10);
-    return monster.receive(attack);
+    return spawnedMonster.receive(attack);
   }
 }

@@ -39,6 +39,14 @@ export class Screen {
     this.canvasContext.fillText(text, x, y);
   }
 
+  strokeStyle(color: string): void {
+    this.canvasContext.strokeStyle = color;
+  }
+
+  stroke(): void {
+    this.canvasContext.stroke();
+  }
+
   get displayX(): number {
     return this.canvasContext.canvas.width / 2;
   }

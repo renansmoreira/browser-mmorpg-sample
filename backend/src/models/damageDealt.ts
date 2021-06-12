@@ -1,11 +1,11 @@
-import Monster from './monster';
+import SpawnedMonster from './spawnedMonster';
 
 export default class DamageDealt {
-  monster: Monster;
+  spawnedMonster: SpawnedMonster;
   damageReceived: number;
 
-  constructor(monster: Monster, damageReceived: number) {
-    this.monster = monster;
+  constructor(spawnedMonster: SpawnedMonster, damageReceived: number) {
+    this.spawnedMonster = spawnedMonster;
     this.damageReceived = damageReceived;
   }
 }

@@ -79,8 +79,8 @@ export default class PlayerEventHandler implements EventHandler {
   async processMonsterAttack(playerSocket: io.Socket, monsterId: string): void {
     // TODO: Add attack validations, like position consistency, map, etc.
     const player: Player = await this.playerCollection.get(playerSocket.id);
-    const monster: Monster = await this.nearbyEnvironmentService.getMonster(monsterId);
-    const damageDealt: DamageDealt = player.attack(monster);
+    const spawnedMonster: SpawnedMonster = await this.nearbyEnvironmentService.getMonster(monsterId);
+    const damageDealt: DamageDealt = player.attack(spawnedMonster);
 
     this.network.publishToEveryone('first-map', 'monster-attacked', damageDealt);
   }

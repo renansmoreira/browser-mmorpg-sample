@@ -29,9 +29,11 @@ sandbox.mediator.subscribe('server:nearby-environment', this, (nearbyEnvironment
   sandbox.gameState.spawnedMonsters = spawnedMonsters;
 });
 
+/*
 sandbox.mediator.subscribe('server:monster-attacked', this, (damageDealt: any) => {
   console.log(damageDealt);
 });
+*/
 
 sandbox.mediator.subscribe('server:map-players', this, (othersPlayers: any) => {
   othersPlayers.forEach((otherPlayerInfo: any) => {
