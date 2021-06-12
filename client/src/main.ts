@@ -19,8 +19,8 @@ sandbox.network.connect();
 // and its not emitted during server map, but works on nearby-environment
 
 sandbox.mediator.subscribe('server:map', this, (mapInfo: any) => {
-  //const trees: Tree[] = mapInfo.a.map((treeInfo: any) => new Tree(sandbox, treeInfo));
-  //sandbox.gameState.trees = trees;
+  const trees: Tree[] = mapInfo.a.map((treeInfo: any) => new Tree(sandbox, treeInfo));
+  sandbox.gameState.trees = trees;
 });
 
 sandbox.mediator.subscribe('server:nearby-environment', this, (nearbyEnvironment: any) => {

@@ -52,10 +52,10 @@ export class SpawnedMonster {
     const finalX = screen.displayX + (this.position.x);
     const finalY = screen.displayY + (this.position.y);
 
+    screen.fillStyle(this.color);
     screen.fillText(`d: ${this.distanceFromPlayer.toString()}`, finalX, finalY + 40);
     screen.fillText(`x: ${this.position.x}, y: ${this.position.y}`, finalX, finalY + 55);
     screen.fillText(`Sx: ${finalX}, Sy: ${finalY}`, finalX, finalY + 75);
-    screen.fillStyle(this.color);
     screen.fillRect(finalX, finalY, this.width, this.height);
   }
 }
