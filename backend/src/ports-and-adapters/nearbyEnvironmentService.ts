@@ -34,12 +34,13 @@ export default class NearbyEnvironmentService {
       const players: Player[] = [];
       const monster = new Monster('1', 100);
       const monsters: Monster[] = [
-        new SpawnedMonster(monster, new Position(this.getRandomNumber(0, 400), this.getRandomNumber(0, 400))),
-        new SpawnedMonster(monster, new Position(this.getRandomNumber(0, 400), this.getRandomNumber(0, 400))),
-        new SpawnedMonster(monster, new Position(this.getRandomNumber(0, 400), this.getRandomNumber(0, 400))),
-        new SpawnedMonster(monster, new Position(this.getRandomNumber(0, 400), this.getRandomNumber(0, 400))),
-        new SpawnedMonster(monster, new Position(this.getRandomNumber(0, 400), this.getRandomNumber(0, 400))),
-        new SpawnedMonster(monster, new Position(this.getRandomNumber(0, 400), this.getRandomNumber(0, 400))),
+        new SpawnedMonster(monster, new Position(120, 300)),
+        new SpawnedMonster(monster, new Position(313, 172.5)),
+        new SpawnedMonster(monster, new Position(485, 185.5)),
+        new SpawnedMonster(monster, new Position(490, 85.5)),
+        new SpawnedMonster(monster, new Position(491, 339.5)),
+        new SpawnedMonster(monster, new Position(633, 369.5)),
+        new SpawnedMonster(monster, new Position(681, 449.5))
       ];
 
       resolve(new NearbyEnvironment(players, monsters));

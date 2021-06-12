@@ -8,6 +8,9 @@ export class Position {
   }
 
   getDistance(targetPosition: Position): number {
-    return Math.hypot(this.x - targetPosition.x, this.y - targetPosition.y);
+    return Math.sqrt(
+      Math.pow(this.x - targetPosition.x, 2) +
+      Math.pow(this.y - targetPosition.y, 2)
+    );
   }
 }

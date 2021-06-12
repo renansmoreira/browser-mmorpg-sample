@@ -17,8 +17,8 @@ export class Tree {
       bindToPlayerMovements: false,
       imageWidth: 32,
       imageHeight: 32,
-      drawWidth: 80,
-      drawHeight: 140
+      drawWidth: 90,
+      drawHeight: 120
     });
     this.changePosition();
 

@@ -1,4 +1,5 @@
 import { Mediator } from './mediator';
+import { Position } from './position';
 
 export class Screen {
   mediator: Mediator;
@@ -44,5 +45,9 @@ export class Screen {
 
   get displayY(): number {
     return this.canvasContext.canvas.height / 2;
+  }
+
+  get displayCenterPosition(): Position {
+    return new Position(this.displayX, this.displayY);
   }
 }

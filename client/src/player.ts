@@ -79,6 +79,8 @@ export class Player {
      
     this.sprite.update(screen, new Position(
       screen.displayX, screen.displayY), this.sandbox);
+    screen.fillText(`x: ${this.sandbox.gameState.currentLocalPlayerPosition.x}, y: ${this.sandbox.gameState.currentLocalPlayerPosition.y}`, screen.displayX, screen.displayY + 70);
+    screen.fillText(`Sx: ${screen.displayX}, Sy: ${screen.displayY}`, screen.displayX, screen.displayY + 90);
   }
 
   move(movement: Movement): void {

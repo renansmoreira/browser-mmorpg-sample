@@ -34,8 +34,11 @@ export class SpawnedMonster {
     this.position = new Position(
       this.originalPosition.x - this.sandbox.gameState.currentLocalPlayerPosition.x,
       this.originalPosition.y - this.sandbox.gameState.currentLocalPlayerPosition.y);
-    this.distanceFromPlayer = this.position.getDistance(
-      this.sandbox.gameState.currentLocalPlayerPosition);
+    const finalX = this.sandbox.screen.displayX + this.position.x;
+    const finalY = this.sandbox.screen.displayY + this.position.y;
+
+    this.distanceFromPlayer = this.sandbox.screen.displayCenterPosition.getDistance(
+      new Position(finalX, finalY));
   }
 
   changeSelection(selectedMonsterId: string): void {
@@ -46,7 +49,13 @@ export class SpawnedMonster {
   }
 
   update(screen: Screen): void {
+    const finalX = screen.displayX + (this.position.x);
+    const finalY = screen.displayY + (this.position.y);
+
+    screen.fillText(`d: ${this.distanceFromPlayer.toString()}`, finalX, finalY + 40);
+    screen.fillText(`x: ${this.position.x}, y: ${this.position.y}`, finalX, finalY + 55);
+    screen.fillText(`Sx: ${finalX}, Sy: ${finalY}`, finalX, finalY + 75);
     screen.fillStyle(this.color);
-    screen.fillRect(screen.displayX + this.position.x, screen.displayY + this.position.y, this.width, this.height);
+    screen.fillRect(finalX, finalY, this.width, this.height);
   }
 }
