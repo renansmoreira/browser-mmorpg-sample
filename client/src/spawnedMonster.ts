@@ -14,6 +14,7 @@ export class SpawnedMonster {
   height: number;
   color: string;
   lifebar: Lifebar;
+  wasKilled: boolean;
 
   constructor(sandbox: Sandbox, spawnedMonsterInfo: any) {
     this.id = spawnedMonsterInfo.id;
@@ -29,6 +30,7 @@ export class SpawnedMonster {
       height: 5,
       borderSize: 1
     });
+    this.wasKilled = false;
     this.changePosition();
 
     this.sandbox.mediator.subscribe('update', this, this.update);
@@ -36,13 +38,6 @@ export class SpawnedMonster {
     this.sandbox.mediator.subscribe('movement-was-made', this, this.changePosition);
     this.sandbox.mediator.subscribe('monster-was-targeted', this, this.changeSelection);
     this.sandbox.mediator.subscribe('server:monster-attacked', this, this.processDamageReceived);
-  }
-
-  processDamageReceived(damageDealt: any): void {
-    if (this.id !== damageDealt.spawnedMonster.id)
-    return;
-
-    this.lifebar.changeCurrentValue(damageDealt.spawnedMonster.currentHp);
   }
 
   changePosition(): void {
@@ -67,7 +62,20 @@ export class SpawnedMonster {
     this.color = 'red';
   }
 
+  processDamageReceived(damageDealt: any): void {
+    if (this.id !== damageDealt.spawnedMonster.id) {
+      return;
+    }
+
+    this.wasKilled = damageDealt.spawnedMonster.wasKilled;
+    this.lifebar.changeCurrentValue(damageDealt.spawnedMonster.currentHp);
+  }
+
   update(screen: Screen): void {
+    if (this.wasKilled) {
+      return;
+    }
+
     const finalX = screen.displayX + (this.position.x);
     const finalY = screen.displayY + (this.position.y);
 

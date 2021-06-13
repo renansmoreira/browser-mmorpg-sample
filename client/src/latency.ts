@@ -19,6 +19,6 @@ export class Latency {
   update(screen: Screen): void {
     screen.font('15px arial');
     screen.fontColor('blue');
-    screen.fillText(`Latency: ${this.latencyInMs}ms`, 10, 20);
+    screen.fillText(`Latency: ${this.latencyInMs}ms`, screen.width - 120, 20);
   }
 }

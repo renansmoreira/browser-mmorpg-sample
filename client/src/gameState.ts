@@ -14,6 +14,7 @@ export class GameState {
 
     this.sandbox.mediator.subscribe('player-started', this, this.changeLocalPlayerCurrentPosition);
     this.sandbox.mediator.subscribe('movement-was-made', this, this.changeLocalPlayerCurrentPosition);
+    this.sandbox.mediator.subscribe('server:monster-attacked', this, this.processMonsterAttack);
   }
 
   changeLocalPlayerCurrentPosition(newPosition: any): void {
@@ -23,5 +24,13 @@ export class GameState {
   getNearestMonster(position: Position): SpawnedMonster {
     return this.spawnedMonsters.reduce((previous, current) =>
       previous.distanceFromPlayer > current.distanceFromPlayer ? current : previous);
+  }
+
+  processMonsterAttack(damageDealt: any): void {
+    if (damageDealt.spawnedMonster.wasKilled) {
+      const spawnedMonsterIndex =
+        this.spawnedMonsters.findIndex(s => s.id === damageDealt.spawnedMonster.id);
+      this.spawnedMonsters.splice(spawnedMonsterIndex, 1);
+    }
   }
 }

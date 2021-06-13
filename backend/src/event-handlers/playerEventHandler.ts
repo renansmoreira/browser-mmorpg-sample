@@ -82,6 +82,10 @@ export default class PlayerEventHandler implements EventHandler {
     const spawnedMonster: SpawnedMonster = await this.nearbyEnvironmentService.getMonster(monsterId);
     const damageDealt: DamageDealt = player.attack(spawnedMonster);
 
+    if (spawnedMonster.wasKilled) {
+      await this.nearbyEnvironmentService.removeMonster(monsterId);
+    }
+
     this.network.publishToEveryone('first-map', 'monster-attacked', damageDealt);
   }
 

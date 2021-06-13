@@ -10,6 +10,7 @@ import NearbyEnvironment from '../models/nearbyEnvironment';
 
 export default class NearbyEnvironmentService {
   network: Network;
+  // TODO: Store in some database and not only in memory
   spawnedMonsters: SpawnedMonster[];
 
   constructor(network: Network) {
@@ -56,13 +57,19 @@ export default class NearbyEnvironmentService {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
-  // TODO: Pretty sure that I need to have a monster ID and a spawned monster id
-  // bcuz I need to hit a spawned one, that will have the same monster id if they are the same
-  async getMonster(spawnedMonsterId: string): Promise<Monster> {
+  // TODO: Change from array to map for better performance
+  async getMonster(spawnedMonsterId: string): Promise<SpawnedMonster> {
     const executor = (resolve) => {
-      const spawnedMonster = this.spawnedMonsters.find(s => s.id === spawnedMonsterId);
-      resolve(spawnedMonster);
+      resolve(this.spawnedMonsters.find(s => s.id === spawnedMonsterId));
     };
-    return new Promise<Monster>(executor);
+    return new Promise<SpawnedMonster>(executor);
+  }
+
+  async removeMonster(spawnedMonsterId: string): Promise<void> {
+    const spawnedMonsterIndex =
+      this.spawnedMonsters.findIndex(s => s.id === spawnedMonsterId);
+    this.spawnedMonsters.splice(spawnedMonsterIndex, 1);
+
+    return Promise.resolve();
   }
 }
