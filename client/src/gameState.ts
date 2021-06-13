@@ -22,6 +22,11 @@ export class GameState {
   }
 
   getNearestMonster(position: Position): SpawnedMonster {
+    // TODO: Return a nullobject when theres no monster
+    if (!this.spawnedMonsters.length) {
+      return null;
+    }
+
     return this.spawnedMonsters.reduce((previous, current) =>
       previous.distanceFromPlayer > current.distanceFromPlayer ? current : previous);
   }

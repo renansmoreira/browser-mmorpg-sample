@@ -80,6 +80,12 @@ export default class PlayerEventHandler implements EventHandler {
     // TODO: Add attack validations, like position consistency, map, etc.
     const player: Player = await this.playerCollection.get(playerSocket.id);
     const spawnedMonster: SpawnedMonster = await this.nearbyEnvironmentService.getMonster(monsterId);
+
+    // TODO: Think about some null objects for player and monster
+    if (!spawnedMonster) {
+      return;
+    }
+
     const damageDealt: DamageDealt = player.attack(spawnedMonster);
 
     if (spawnedMonster.wasKilled) {

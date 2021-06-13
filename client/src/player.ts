@@ -93,8 +93,15 @@ export class Player {
   }
 
   selectNearbyMonster(): void {
-    this.selectedMonsterId = this.sandbox.gameState.getNearestMonster(new Position(this.x, this.y)).id;
-    this.sandbox.mediator.publish('monster-was-targeted', this.selectedMonsterId);
+    const selectedMonster = this.sandbox.gameState.getNearestMonster(new Position(this.x, this.y));
+
+    if (selectedMonster) {
+      this.selectedMonsterId = selectedMonster.id;
+      this.sandbox.mediator.publish('monster-was-targeted', this.selectedMonsterId);
+    }
+    else {
+      this.selectedMonsterId = null;
+    }
   }
 
   attackSelectedMonster(): void {

@@ -73,6 +73,7 @@ export class SpawnedMonster {
 
   update(screen: Screen): void {
     if (this.wasKilled) {
+      // TODO: Play death animation
       return;
     }
 
