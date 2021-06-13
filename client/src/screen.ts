@@ -47,12 +47,20 @@ export class Screen {
     this.canvasContext.stroke();
   }
 
+  get width(): number {
+    return this.canvasContext.canvas.width;
+  }
+
+  get height(): number {
+    return this.canvasContext.canvas.height;
+  }
+
   get displayX(): number {
-    return this.canvasContext.canvas.width / 2;
+    return this.width / 2;
   }
 
   get displayY(): number {
-    return this.canvasContext.canvas.height / 2;
+    return this.height / 2;
   }
 
   get displayCenterPosition(): Position {

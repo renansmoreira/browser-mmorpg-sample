@@ -1,6 +1,7 @@
 import { Sandbox } from './sandbox';
 import { Controllers } from './controllers';
 import { Game } from './game';
+import { Hud } from './hud';
 import { Player } from './player';
 import { OtherPlayer } from './otherPlayer';
 import { Tree } from './tree';
@@ -9,6 +10,7 @@ import { Latency } from './latency';
 
 const sandbox = new Sandbox();
 
+new Hud(sandbox);
 new Player(sandbox);
 new Latency(sandbox);
 new Game(sandbox).configure().start();
@@ -28,12 +30,6 @@ sandbox.mediator.subscribe('server:nearby-environment', this, (nearbyEnvironment
     .map((spawnedMonster: any) => new SpawnedMonster(sandbox, spawnedMonster));
   sandbox.gameState.spawnedMonsters = spawnedMonsters;
 });
-
-/*
-sandbox.mediator.subscribe('server:monster-attacked', this, (damageDealt: any) => {
-  console.log(damageDealt);
-});
-*/
 
 sandbox.mediator.subscribe('server:map-players', this, (othersPlayers: any) => {
   othersPlayers.forEach((otherPlayerInfo: any) => {
