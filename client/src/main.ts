@@ -31,6 +31,10 @@ sandbox.mediator.subscribe('server:nearby-environment', this, (nearbyEnvironment
   sandbox.gameState.spawnedMonsters = spawnedMonsters;
 });
 
+sandbox.mediator.subscribe('server:monster-spawned', this, (newSpawnedMonster: SpawnedMonster) => {
+  sandbox.gameState.addSpawnedMonster(new SpawnedMonster(sandbox, newSpawnedMonster));
+});
+
 sandbox.mediator.subscribe('server:map-players', this, (othersPlayers: any) => {
   othersPlayers.forEach((otherPlayerInfo: any) => {
     new OtherPlayer(sandbox, otherPlayerInfo);

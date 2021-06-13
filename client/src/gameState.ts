@@ -38,4 +38,8 @@ export class GameState {
       this.spawnedMonsters.splice(spawnedMonsterIndex, 1);
     }
   }
+
+  addSpawnedMonster(newSpawnedMonster: SpawnedMonster): void {
+    this.spawnedMonsters.push(newSpawnedMonster);
+  }
 }

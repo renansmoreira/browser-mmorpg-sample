@@ -10,6 +10,7 @@ import NearbyEnvironment from '../models/nearbyEnvironment';
 
 export default class NearbyEnvironmentService {
   network: Network;
+
   // TODO: Store in some database and not only in memory
   spawnedMonsters: SpawnedMonster[];
 
@@ -66,10 +67,21 @@ export default class NearbyEnvironmentService {
   }
 
   async removeMonster(spawnedMonsterId: string): Promise<void> {
-    const spawnedMonsterIndex =
-      this.spawnedMonsters.findIndex(s => s.id === spawnedMonsterId);
+    const spawnedMonsterIndex = this.spawnedMonsters
+    .findIndex(s => s.id === spawnedMonsterId);
+
+    this.respawnMonster(this.spawnedMonsters[spawnedMonsterIndex]);
     this.spawnedMonsters.splice(spawnedMonsterIndex, 1);
 
     return Promise.resolve();
+  }
+
+  async respawnMonster(spawnedMonster: SpawnedMonster): Promise<void> {
+    return Promise.resolve(setTimeout(() => {
+      const newSpawnedMonster = new SpawnedMonster(spawnedMonster.monster, 100, spawnedMonster.position);
+
+      this.spawnedMonsters.push(newSpawnedMonster);
+      this.network.publishToEveryone('first-map', 'monster-spawned', newSpawnedMonster);
+    }, 3000));
   }
 }
