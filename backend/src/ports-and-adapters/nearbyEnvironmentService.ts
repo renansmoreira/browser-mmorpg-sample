@@ -17,7 +17,7 @@ export default class NearbyEnvironmentService {
   constructor(network: Network) {
     this.network = network;
 
-    const monster = new Monster(v4(), 100);
+    const monster = new Monster(v4(), 100, 70);
     this.spawnedMonsters = [
       new SpawnedMonster(monster, 100, new Position(120, 300)),
       new SpawnedMonster(monster, 50, new Position(313, 172.5)),

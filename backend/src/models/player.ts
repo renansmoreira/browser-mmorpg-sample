@@ -24,4 +24,8 @@ export default class Player {
     const attack: PlayerAttack = new PlayerAttack(10);
     return spawnedMonster.receive(attack);
   }
+
+  addExperience(newAmount: number): void {
+    // TODO: Create a model for level and experience handling
+  }
 }

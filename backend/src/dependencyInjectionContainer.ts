@@ -5,6 +5,7 @@ import PlayerCollection from './ports-and-adapters/playerCollection';
 import NearbyEnvironmentService from './ports-and-adapters/nearbyEnvironmentService';
 import MapCollection from './ports-and-adapters/mapCollection';
 import PlayerEventHandler from './event-handlers/playerEventHandler';
+import { ExperienceService } from './services/experienceService';
 
 class DependencyInjectionContainer {
   cache: Record<string, any>;
@@ -34,8 +35,9 @@ const factories = {
   'PlayerCollection': () => new PlayerCollection(),
   'NearbyEnvironmentService': () => new NearbyEnvironmentService(diContainer.get(Network)),
   'MapCollection': () => new MapCollection(),
+  'ExperienceService': () => new ExperienceService(),
   'PlayerEventHandler': () => new PlayerEventHandler(diContainer.get(Network), diContainer.get(PlayerCollection),
-    diContainer.get(NearbyEnvironmentService), diContainer.get(MapCollection))
+    diContainer.get(NearbyEnvironmentService), diContainer.get(MapCollection), diContainer.get(ExperienceService))
 };
 
 const emptyFactory = (wantedType: any) =>

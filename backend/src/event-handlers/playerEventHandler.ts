@@ -11,21 +11,25 @@ import NearbyEnvironment from '../models/nearbyEnvironment';
 import PlayerCollection from '../ports-and-adapters/playerCollection';
 import NearbyEnvironmentService from '../ports-and-adapters/nearbyEnvironmentService';
 import MapCollection from '../ports-and-adapters/mapCollection';
+import { ExperienceService } from '../services/experienceService';
 
 export default class PlayerEventHandler implements EventHandler {
   network: Network;
   playerCollection: PlayerCollection;
   nearbyEnvironmentService: NearbyEnvironmentService;
   mapCollection: MapCollection;
+  experienceService: ExperienceService;
 
   constructor(network: Network,
     playerCollection: PlayerCollection,
     nearbyEnvironmentService: NearbyEnvironmentService,
-    mapCollection: MapCollection) {
+    mapCollection: MapCollection,
+    experienceService: ExperienceService) {
     this.network = network;
     this.playerCollection = playerCollection;
     this.nearbyEnvironmentService = nearbyEnvironmentService;
     this.mapCollection = mapCollection;
+    this.experienceService = experienceService;
   }
 
   async fetchStarterInformation(playerSocket: io.Socket): void {
@@ -90,6 +94,7 @@ export default class PlayerEventHandler implements EventHandler {
 
     if (spawnedMonster.wasKilled) {
       await this.nearbyEnvironmentService.removeMonster(monsterId);
+      player.addExperience(this.experienceService.calculateFor(spawnedMonster.monster));
     }
 
     this.network.publishToEveryone('first-map', 'monster-attacked', damageDealt);
