@@ -5,6 +5,7 @@ export class ExperienceService {
   }
 
   calculateFor(monster: Monster): number {
-    return 100;
+    // TODO: Add some server-side variant in exp calculation later
+    return monster.experience;
   }
 }

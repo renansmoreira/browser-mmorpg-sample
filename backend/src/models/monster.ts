@@ -8,6 +8,6 @@ export default class Monster {
   constructor(id: string, hp: number) {
     this.id = id;
     this.hp = hp;
-    this.experience = 100;
+    this.experience = 10;
   }
 }

@@ -43,6 +43,7 @@ export class Player {
     this.id = joiningInfo.id;
     this.x = joiningInfo.position.x;
     this.y = joiningInfo.position.y;
+    console.log(joiningInfo);
 
     this.sandbox.mediator.publish('player-started', { x: this.x, y: this.y });
     this.sandbox.network.send('player-started', this.name);

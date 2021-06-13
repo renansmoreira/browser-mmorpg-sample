@@ -95,6 +95,8 @@ export default class PlayerEventHandler implements EventHandler {
     if (spawnedMonster.wasKilled) {
       await this.nearbyEnvironmentService.removeMonster(monsterId);
       player.addExperience(this.experienceService.calculateFor(spawnedMonster.monster));
+
+      this.network.publishTo(playerSocket, 'experience-acquired', player.level);
     }
 
     this.network.publishToEveryone('first-map', 'monster-attacked', damageDealt);

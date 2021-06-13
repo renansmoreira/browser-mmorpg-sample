@@ -1,3 +1,4 @@
+import { Level } from './level';
 import Position from './position';
 import SpawnedMonster from './spawnedMonster';
 import PlayerAttack from './playerAttack';
@@ -6,10 +7,12 @@ export default class Player {
   id: string;
   position: Position;
   name: string;
+  level: Level;
 
   constructor(id: string, position: Position) {
     this.id = id;
     this.position = position;
+    this.level = new Level(190);
   }
 
   changeName(newName: string): void {
@@ -26,6 +29,6 @@ export default class Player {
   }
 
   addExperience(newAmount: number): void {
-    // TODO: Create a model for level and experience handling
+    this.level.addExperience(newAmount);
   }
 }
