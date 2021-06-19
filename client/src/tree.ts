@@ -18,7 +18,8 @@ export class Tree {
       imageWidth: 32,
       imageHeight: 32,
       drawWidth: 90,
-      drawHeight: 120
+      drawHeight: 120,
+      stoppedAnimate: false
     });
     this.changePosition();
 

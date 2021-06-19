@@ -11,6 +11,7 @@ export class SpriteConfig {
   imageHeight: number;
   drawWidth: number;
   drawHeight: number;
+  stoppedAnimate: boolean = false;
 }
 
 export class Sprite {
@@ -60,7 +61,7 @@ export class Sprite {
       this.stop = this.sandbox.controllers.anyMovementButtonIsPressed === false;
     }
 
-    if (this.config.framesPerSprite && !this.stop) {
+    if (this.config.framesPerSprite && (this.config.stoppedAnimate || !this.stop)) {
       this.actualFrameCount += 1;
 
       if (this.actualFrameCount === this.config.framesPerSprite) {
