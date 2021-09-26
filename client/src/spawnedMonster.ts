@@ -1,5 +1,5 @@
 import { Sandbox } from './sandbox';
-import { Sprite } from './sprite';
+import { Sprite } from 'spritez';
 import { Position } from './position';
 import { Screen } from './screen';
 import { Lifebar } from './lifebar';
@@ -21,15 +21,38 @@ export class SpawnedMonster {
     this.position = this.originalPosition =
       new Position(spawnedMonsterInfo.position.x, spawnedMonsterInfo.position.y);
     this.sprite = new Sprite({
-      framesPerSprite: 3,
-      path: '/assets/ghoul_right.png',
-      flippedPath: '/assets/ghoul_left.png',
-      bindToPlayerMovements: true,
-      imageWidth: 31,
-      imageHeight: 24,
-      drawWidth: 50,
-      drawHeight: 40,
-      stoppedAnimate: true
+      show: true,
+      drawImage: {
+        width: 50,
+        height: 40
+      },
+      position: {
+        x: 80,
+        y: 80
+      },
+      defaultAnimation: 'stand_left',
+      animations: {
+        'stand_left': {
+          startFrame: 0,
+          maxFrames: 2,
+          framesToChangeSprite: 20,
+          image: {
+            src: '/assets/ghoul_left.png',
+            width: 31,
+            height: 24
+          }
+        },
+        'stand_right': {
+          startFrame: 0,
+          maxFrames: 2,
+          framesToChangeSprite: 20,
+          image: {
+            src: '/assets/ghoul_right.png',
+            width: 31,
+            height: 24
+          }
+        }
+      }
     });
     this.lifebar = new Lifebar(sandbox, {
       referencePosition: this.position,
@@ -50,7 +73,7 @@ export class SpawnedMonster {
 
   changePosition(): void {
     if (!this.sandbox.gameState.currentLocalPlayerPosition)
-    return;
+      return;
 
     this.position = new Position(
       this.originalPosition.x - this.sandbox.gameState.currentLocalPlayerPosition.x,
@@ -91,8 +114,8 @@ export class SpawnedMonster {
       screen.fillText(`Sx: ${finalX}, Sy: ${finalY}`, finalX, finalY + 75);
     }
 
-    this.sprite.update(screen, new Position(
-      finalX, finalY), this.sandbox);
+    this.sprite.changePosition({ x: finalX, y: finalY });
+    this.sprite.update(screen.context);
     this.lifebar.update(screen, finalX, finalY);
   }
 }

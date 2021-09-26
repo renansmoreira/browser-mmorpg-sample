@@ -1,7 +1,7 @@
 import { Sandbox } from './sandbox';
 import { Position } from './position';
 import { Screen } from './screen';
-import { Sprite } from './sprite';
+import { Sprite } from 'spritez';
 
 export class Tree {
   sandbox: Sandbox;
@@ -13,13 +13,29 @@ export class Tree {
     this.sandbox = sandbox;
     this.position = this.originalPosition = new Position(treeInfo.x, treeInfo.y);
     this.sprite = new Sprite({
-      path: '/assets/cedar.png',
-      bindToPlayerMovements: false,
-      imageWidth: 32,
-      imageHeight: 32,
-      drawWidth: 90,
-      drawHeight: 120,
-      stoppedAnimate: false
+      name: 'Tree',
+      show: true,
+      drawImage: {
+        width: 100,
+        height: 100
+      },
+      position: {
+        x: 150,
+        y: 150
+      },
+      defaultAnimation: 'static',
+      animations: {
+        'static': {
+          startFrame: 0,
+          maxFrames: 0,
+          framesToChangeSprite: 20,
+          image: {
+            src: '/assets/cedar.png',
+            width: 48,
+            height: 48
+          }
+        }
+      }
     });
     this.changePosition();
 
@@ -38,9 +54,10 @@ export class Tree {
   }
 
   update(screen: Screen): void {
-    this.sprite.update(screen, new Position(
-      screen.displayX + this.position.x,
-      screen.displayY + this.position.y
-    ), this.sandbox);
+    this.sprite.changePosition({
+      x: screen.displayX + this.position.x,
+      y: screen.displayY + this.position.y
+    });
+    this.sprite.update(screen.context);
   }
 }

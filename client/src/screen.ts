@@ -47,6 +47,10 @@ export class Screen {
     this.canvasContext.stroke();
   }
 
+  get context(): CanvasRenderingContext2D {
+    return this.canvasContext;
+  }
+
   get width(): number {
     return this.canvasContext.canvas.width;
   }

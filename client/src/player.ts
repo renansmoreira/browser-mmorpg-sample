@@ -1,7 +1,7 @@
 import { Sandbox } from './sandbox';
 import { Screen } from './screen';
 import { Movement } from './movement';
-import { Sprite } from './sprite';
+import { Sprite } from 'spritez';
 import { Position } from './position';
 
 export class Player {
@@ -25,15 +25,58 @@ export class Player {
     this.speed = 5;
     this.color = 'black';
     this.sprite = new Sprite({
-      framesPerSprite: 3,
-      path: '/assets/walking.png',
-      flippedPath: '/assets/walking_flipped.png',
-      bindToPlayerMovements: true,
-      imageWidth: 96,
-      imageHeight: 132,
-      drawWidth: 40,
-      drawHeight: 50,
-      stoppedAnimate: false
+      show: true,
+      drawImage: {
+        width: 40,
+        height: 50
+      },
+      position: {
+        x: 310,
+        y: 310
+      },
+      defaultAnimation: 'stand_left',
+      animations: {
+        'stand_left': {
+          startFrame: 0,
+          maxFrames: 0,
+          framesToChangeSprite: 3,
+          image: {
+            src: '/assets/walking.png',
+            width: 96,
+            height: 132
+          }
+        },
+        'stand_right': {
+          startFrame: 0,
+          maxFrames: 0,
+          framesToChangeSprite: 3,
+          image: {
+            src: '/assets/walking_flipped.png',
+            width: 96,
+            height: 132
+          }
+        },
+        'walk_left': {
+          startFrame: 1,
+          maxFrames: 24,
+          framesToChangeSprite: 3,
+          image: {
+            src: '/assets/walking.png',
+            width: 96,
+            height: 132
+          }
+        },
+        'walk_right': {
+          startFrame: 1,
+          maxFrames: 24,
+          framesToChangeSprite: 3,
+          image: {
+            src: '/assets/walking_flipped.png',
+            width: 96,
+            height: 132
+          }
+        }
+      }
     });
 
     this.registerMovementHandlers();
@@ -48,6 +91,8 @@ export class Player {
     this.sandbox.mediator.publish('player-started', { x: this.x, y: this.y });
     this.sandbox.network.send('player-started', this.name);
     this.sandbox.mediator.subscribe('movement-key-was-pressed', this, this.move);
+    this.sandbox.mediator.subscribe('movement-key-was-pressed', this, this.changeSprite);
+    this.sandbox.mediator.subscribe('movement-key-was-released', this, this.resetSprite);
     this.sandbox.mediator.subscribe('target-key-was-pressed', this, this.selectNearbyMonster);
     this.sandbox.mediator.subscribe('attack-key-was-pressed', this, this.attackSelectedMonster);
     this.sandbox.mediator.subscribe('update', this, this.update);
@@ -58,6 +103,63 @@ export class Player {
     this.movementHandlers[Movement.Down] = () => this.y += 1 * this.speed;
     this.movementHandlers[Movement.Left] = () => this.x -= 1 * this.speed;
     this.movementHandlers[Movement.Right] = () => this.x += 1 * this.speed;
+  }
+
+  move(movement: Movement): void {
+    (this.movementHandlers[movement] || (() => {}))();
+    this.sandbox.mediator.publish('movement-was-made', new Position(this.x, this.y));
+  }
+
+  changeSprite(movement: Movement): void {
+    if (movement === Movement.Left) {
+      this.sprite.changeAnimation('walk_left');
+    }
+
+    if (movement === Movement.Right) {
+      this.sprite.changeAnimation('walk_right');
+    }
+
+    if (movement === Movement.Up) {
+      if (this.sprite.currentAnimationName.indexOf('_right') > -1)
+        this.sprite.changeAnimation('walk_right');
+
+        if (this.sprite.currentAnimationName.indexOf('_left') > -1)
+          this.sprite.changeAnimation('walk_left');
+    }
+
+    if (movement === Movement.Down) {
+      if (this.sprite.currentAnimationName.indexOf('_right') > -1)
+        this.sprite.changeAnimation('walk_right');
+
+        if (this.sprite.currentAnimationName.indexOf('_left') > -1)
+          this.sprite.changeAnimation('walk_left');
+    }
+  }
+
+  resetSprite(): void {
+    if (!this.sandbox.controllers.anyMovementButtonIsPressed) {
+      if (this.sprite.currentAnimationName.indexOf('_right') > -1)
+        this.sprite.changeAnimation('stand_right');
+
+        if (this.sprite.currentAnimationName.indexOf('_left') > -1)
+          this.sprite.changeAnimation('stand_left');
+    }
+  }
+
+  selectNearbyMonster(): void {
+    const selectedMonster = this.sandbox.gameState.getNearestMonster(new Position(this.x, this.y));
+
+    if (selectedMonster) {
+      this.selectedMonsterId = selectedMonster.id;
+      this.sandbox.mediator.publish('monster-was-targeted', this.selectedMonsterId);
+    }
+    else {
+      this.selectedMonsterId = null;
+    }
+  }
+
+  attackSelectedMonster(): void {
+    this.sandbox.mediator.publish('monster-was-attacked', this.selectedMonsterId);
   }
 
   update(screen: Screen): void {
@@ -77,35 +179,13 @@ export class Player {
     if (this.sandbox.controllers.downIsPressed) {
       this.move(Movement.Down);
     }
-     
-    this.sprite.update(screen, new Position(
-      screen.displayX, screen.displayY), this.sandbox);
+    
+    this.sprite.changePosition({ x: screen.displayX, y: screen.displayY });
+    this.sprite.update(screen.context)
 
     if (this.sandbox.debug) {
       screen.fillText(`x: ${this.sandbox.gameState.currentLocalPlayerPosition.x}, y: ${this.sandbox.gameState.currentLocalPlayerPosition.y}`, screen.displayX, screen.displayY + 70);
       screen.fillText(`Sx: ${screen.displayX}, Sy: ${screen.displayY}`, screen.displayX, screen.displayY + 90);
     }
-  }
-
-  move(movement: Movement): void {
-    (this.movementHandlers[movement] || (() => {}))();
-
-    this.sandbox.mediator.publish('movement-was-made', new Position(this.x, this.y));
-  }
-
-  selectNearbyMonster(): void {
-    const selectedMonster = this.sandbox.gameState.getNearestMonster(new Position(this.x, this.y));
-
-    if (selectedMonster) {
-      this.selectedMonsterId = selectedMonster.id;
-      this.sandbox.mediator.publish('monster-was-targeted', this.selectedMonsterId);
-    }
-    else {
-      this.selectedMonsterId = null;
-    }
-  }
-
-  attackSelectedMonster(): void {
-    this.sandbox.mediator.publish('monster-was-attacked', this.selectedMonsterId);
   }
 }

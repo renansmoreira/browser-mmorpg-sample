@@ -47,6 +47,7 @@ export class Controllers {
 
       this.anyMovementButtonIsPressed = false; //this.leftIsPressed === false && this.rightIsPressed === false;
       //console.log('up', this.leftIsPressed, this.rightIsPressed, this.anyMovementButtonIsPressed);
+      this.sandbox.mediator.publish('movement-key-was-released', movement);
     }
   }
 
