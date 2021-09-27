@@ -1,4 +1,4 @@
-import { Sandbox } from './sandbox';
+import { Sandbox } from '../sandbox';
 
 export class Game {
   sandbox: Sandbox;

@@ -1,6 +1,6 @@
 import { Sandbox, Screen } from '../sandbox';
 import { Position } from '../models/position';
-import { LifebarOptions } from '../lifebarOptions';
+import { LifebarOptions } from './lifebarOptions';
 
 export class Lifebar {
   sandbox: Sandbox;

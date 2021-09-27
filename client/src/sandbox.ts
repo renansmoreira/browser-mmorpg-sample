@@ -3,7 +3,7 @@ import { Randomizer } from './adapters/randomizer';
 import { Mediator } from './mediator';
 import { Network } from './adapters/network';
 import { Screen } from './adapters/screen';
-import { GameState } from './gameState';
+import { GameState } from './game-management/gameState';
 import { Controllers } from './adapters/controllers';
 
 export { Screen };

@@ -1,5 +1,5 @@
 import { Sandbox } from './sandbox';
-import { Game } from './game';
+import { Game } from './game-management/game';
 import { Hud } from './components/hud';
 import { Player } from './components/player';
 import { OtherPlayer } from './components/otherPlayer';
