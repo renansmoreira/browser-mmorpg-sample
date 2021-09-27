@@ -20,4 +20,5 @@ Got all sprites for free on [itch.io](https://itch.io/) and adjusted them with [
 - Player.ts with high cyclomatic complexity in `update()` code;
 - No further animations for the enemy. It has only one standing animation and just disappear when they die;
 - Exp bar and leveling are showing only in the client, refresh and it will be reseted;
-- Lots of `TODO` with code design improvements or features that were not made.
+- Lots of `TODO` with code design improvements or features that were not made;
+- Need to change local [Spritez](https://github.com/renansmoreira/spritez) installation to npm version.
