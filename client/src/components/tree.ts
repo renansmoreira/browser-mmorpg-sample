@@ -29,7 +29,7 @@ export class Tree {
           maxFrames: 0,
           framesToChangeSprite: 20,
           image: {
-            src: '/assets/cedar.png',
+            src: '/assets/tree.png',
             width: 48,
             height: 48
           }
