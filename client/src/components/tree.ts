@@ -1,5 +1,5 @@
-import { Sandbox, Screen } from './sandbox';
-import { Position } from './position';
+import { Sandbox, Screen } from '../sandbox';
+import { Position } from '../models/position';
 import { Sprite } from 'spritez';
 
 export class Tree {

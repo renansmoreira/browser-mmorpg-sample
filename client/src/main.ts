@@ -1,11 +1,11 @@
 import { Sandbox } from './sandbox';
 import { Game } from './game';
-import { Hud } from './hud';
-import { Player } from './player';
-import { OtherPlayer } from './otherPlayer';
-import { Tree } from './tree';
-import { SpawnedMonster } from './spawnedMonster';
-import { Latency } from './latency';
+import { Hud } from './components/hud';
+import { Player } from './components/player';
+import { OtherPlayer } from './components/otherPlayer';
+import { Tree } from './components/tree';
+import { SpawnedMonster } from './components/spawnedMonster';
+import { Latency } from './components/latency';
 
 const sandbox = new Sandbox();
 

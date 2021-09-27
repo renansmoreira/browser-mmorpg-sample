@@ -1,7 +1,7 @@
 import { Sandbox } from './sandbox';
-import { Tree } from './tree';
-import { SpawnedMonster } from './spawnedMonster';
-import { Position } from './position';
+import { Tree } from './components/tree';
+import { SpawnedMonster } from './components/spawnedMonster';
+import { Position } from './models/position';
 
 export class GameState {
   sandbox: Sandbox;

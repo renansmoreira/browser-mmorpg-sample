@@ -1,7 +1,7 @@
-import { Sandbox, Screen } from './sandbox';
-import { Movement } from './movement';
+import { Sandbox, Screen } from '../sandbox';
+import { Movement } from '../models/movement';
 import { Sprite } from 'spritez';
-import { Position } from './position';
+import { Position } from '../models/position';
 
 export class Player {
   sandbox: Sandbox;
