@@ -1,10 +1,12 @@
-import { Logger } from './logger';
-import { Randomizer } from './randomizer';
+import { Logger } from './adapters/logger';
+import { Randomizer } from './adapters/randomizer';
 import { Mediator } from './mediator';
-import { Network } from './network';
-import { Screen } from './screen';
+import { Network } from './adapters/network';
+import { Screen } from './adapters/screen';
 import { GameState } from './gameState';
-import { Controllers } from './controllers';
+import { Controllers } from './adapters/controllers';
+
+export { Screen };
 
 export class Sandbox {
   debug: boolean;

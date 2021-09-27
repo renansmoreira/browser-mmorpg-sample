@@ -1,5 +1,4 @@
-import { Sandbox } from './sandbox';
-import { Screen } from './screen';
+import { Sandbox, Screen } from './sandbox';
 
 export class Latency {
   sandbox: Sandbox;

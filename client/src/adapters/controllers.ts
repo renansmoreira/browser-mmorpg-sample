@@ -1,6 +1,6 @@
-import { Sandbox } from './sandbox';
-import { Key } from './key';
-import { Movement } from './movement';
+import { Sandbox } from '../sandbox';
+import { Key } from '../key';
+import { Movement } from '../movement';
 
 const inputs: Record<string, Movement> = {};
 inputs[Key.W.toString()] = Movement.Up;

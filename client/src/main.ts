@@ -1,5 +1,4 @@
 import { Sandbox } from './sandbox';
-import { Controllers } from './controllers';
 import { Game } from './game';
 import { Hud } from './hud';
 import { Player } from './player';

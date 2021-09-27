@@ -1,5 +1,5 @@
-import { Mediator } from './mediator';
-import { Position } from './position';
+import { Mediator } from '../mediator';
+import { Position } from '../position';
 
 export class Screen {
   mediator: Mediator;

@@ -1,7 +1,6 @@
-import { Sandbox } from './sandbox';
+import { Sandbox, Screen } from './sandbox';
 import { Sprite } from 'spritez';
 import { Position } from './position';
-import { Screen } from './screen';
 import { Lifebar } from './lifebar';
 
 export class SpawnedMonster {

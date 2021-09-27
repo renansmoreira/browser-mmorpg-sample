@@ -1,5 +1,4 @@
-import { Sandbox } from './sandbox';
-import { Screen } from './screen';
+import { Sandbox, Screen } from './sandbox';
 import { Movement } from './movement';
 import { Sprite } from 'spritez';
 import { Position } from './position';

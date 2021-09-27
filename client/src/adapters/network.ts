@@ -1,4 +1,4 @@
-import { Sandbox } from './sandbox';
+import { Sandbox } from '../sandbox';
 import * as io from 'socket.io-client';
 
 const emptyPacket = ['empty', ''];
