@@ -3,7 +3,6 @@ import { Sprite } from 'spritez';
 import { Position } from './position';
 import { Screen } from './screen';
 import { Lifebar } from './lifebar';
-import { LifebarOptions } from './lifebarOptions';
 
 export class SpawnedMonster {
   id: string;
