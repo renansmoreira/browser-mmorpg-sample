@@ -105,8 +105,12 @@ export class Player {
   }
 
   move(movement: Movement): void {
-    (this.movementHandlers[movement] || (() => {}))();
+    (this.movementHandlers[movement] || (() => { }))();
     this.sandbox.mediator.publish('movement-was-made', new Position(this.x, this.y));
+  }
+
+  private getCurrentAnimationNameDirection(): string {
+    return this.sprite.currentAnimationName.substring(this.sprite.currentAnimationName.indexOf('_'));
   }
 
   changeSprite(movement: Movement): void {
@@ -118,30 +122,14 @@ export class Player {
       this.sprite.changeAnimation('walk_right');
     }
 
-    if (movement === Movement.Up) {
-      if (this.sprite.currentAnimationName.indexOf('_right') > -1)
-        this.sprite.changeAnimation('walk_right');
-
-        if (this.sprite.currentAnimationName.indexOf('_left') > -1)
-          this.sprite.changeAnimation('walk_left');
-    }
-
-    if (movement === Movement.Down) {
-      if (this.sprite.currentAnimationName.indexOf('_right') > -1)
-        this.sprite.changeAnimation('walk_right');
-
-        if (this.sprite.currentAnimationName.indexOf('_left') > -1)
-          this.sprite.changeAnimation('walk_left');
+    if ([Movement.Up, Movement.Down].indexOf(movement) > -1) {
+      this.sprite.changeAnimation(`walk${this.getCurrentAnimationNameDirection()}`);
     }
   }
 
   resetSprite(): void {
     if (!this.sandbox.controllers.anyMovementButtonIsPressed) {
-      if (this.sprite.currentAnimationName.indexOf('_right') > -1)
-        this.sprite.changeAnimation('stand_right');
-
-        if (this.sprite.currentAnimationName.indexOf('_left') > -1)
-          this.sprite.changeAnimation('stand_left');
+      this.sprite.changeAnimation(`stand${this.getCurrentAnimationNameDirection()}`);
     }
   }
 
@@ -162,7 +150,7 @@ export class Player {
   }
 
   update(screen: Screen): void {
-    // TODO: Remove later
+    // TODO: Replace ifs later using Movement enum and dictionary
     if (this.sandbox.controllers.leftIsPressed) {
       this.move(Movement.Left);
     }
@@ -178,7 +166,7 @@ export class Player {
     if (this.sandbox.controllers.downIsPressed) {
       this.move(Movement.Down);
     }
-    
+
     this.sprite.changePosition({ x: screen.displayX, y: screen.displayY });
     this.sprite.update(screen.context)
 

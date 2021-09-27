@@ -18,6 +18,7 @@ export class Controllers {
   upIsPressed: boolean = false;
   downIsPressed: boolean = false;
   anyMovementButtonIsPressed: boolean = false;
+
   private _inputHandlers: { [key: string]: Function } = {
     'Up': (isPressed: boolean): boolean => this.upIsPressed = isPressed,
     'Down': (isPressed: boolean): boolean => this.downIsPressed = isPressed,
