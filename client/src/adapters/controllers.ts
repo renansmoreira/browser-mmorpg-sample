@@ -18,6 +18,14 @@ export class Controllers {
   upIsPressed: boolean = false;
   downIsPressed: boolean = false;
   anyMovementButtonIsPressed: boolean = false;
+  private _inputHandlers: { [key: string]: Function } = {
+    'Up': (isPressed: boolean): boolean => this.upIsPressed = isPressed,
+    'Down': (isPressed: boolean): boolean => this.downIsPressed = isPressed,
+    'Left': (isPressed: boolean): boolean => this.leftIsPressed = isPressed,
+    'Right': (isPressed: boolean): boolean => this.rightIsPressed = isPressed,
+    'Target': (): void => this.sandbox.mediator.publish('target-key-was-pressed', Movement.Target),
+    'Attack': (): void => this.sandbox.mediator.publish('attack-key-was-pressed', Movement.Attack)
+  };
 
   constructor(sandbox: Sandbox) {
     this.sandbox = sandbox;
@@ -31,48 +39,23 @@ export class Controllers {
     });
   }
 
+  private getInputHandler(movement: Movement): Function {
+    const defaultFunction: Function = (): boolean => false;
+    return this._inputHandlers[Movement[movement]] || defaultFunction;
+  }
+
   private removeInput(movement: Movement): void {
     if (movement) {
-      if (movement === Movement.Left)
-        this.leftIsPressed = false;
-
-      if (movement === Movement.Right)
-        this.rightIsPressed = false;
-
-      if (movement === Movement.Up)
-        this.upIsPressed = false;
-
-      if (movement === Movement.Down)
-        this.downIsPressed = false;
-
-      this.anyMovementButtonIsPressed = false; //this.leftIsPressed === false && this.rightIsPressed === false;
-      //console.log('up', this.leftIsPressed, this.rightIsPressed, this.anyMovementButtonIsPressed);
+      this.getInputHandler(movement).apply(this, [false]);
+      this.anyMovementButtonIsPressed = false;
       this.sandbox.mediator.publish('movement-key-was-released', movement);
     }
   }
 
   private processInput(movement: Movement): void {
     if (movement) {
-      if (movement === Movement.Left)
-        this.leftIsPressed = true;
-
-      if (movement === Movement.Right)
-        this.rightIsPressed = true;
-
-      if (movement === Movement.Up)
-        this.upIsPressed = true;
-
-      if (movement === Movement.Down)
-        this.downIsPressed = true;
-
-      if (movement === Movement.Target)
-        return this.sandbox.mediator.publish('target-key-was-pressed', movement);
-
-      if (movement === Movement.Attack)
-        return this.sandbox.mediator.publish('attack-key-was-pressed', movement);
-
-      this.anyMovementButtonIsPressed = true; //this.leftIsPressed || this.rightIsPressed;
-      //console.log('down', this.leftIsPressed, this.rightIsPressed, this.anyMovementButtonIsPressed);
+      this.getInputHandler(movement).apply(this, [true]);
+      this.anyMovementButtonIsPressed = true;
       this.sandbox.mediator.publish('movement-key-was-pressed', movement);
     }
   }
